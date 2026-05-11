@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { createHash } from 'crypto'
+
+async function computeAdminToken(password: string): Promise<string> {
+  const secret = process.env.ADMIN_SECRET ?? 'portfolio-secret-2024'
+  const encoder = new TextEncoder()
+  const data = encoder.encode(password + secret)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,10 +19,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 })
     }
 
-    // Create a simple token (hash of password + secret)
-    const token = createHash('sha256')
-      .update(password + (process.env.ADMIN_SECRET ?? 'portfolio-secret-2024'))
-      .digest('hex')
+    // Create a token using Web Crypto API (Edge-compatible)
+    const token = await computeAdminToken(password)
 
     // Set cookie
     const cookieStore = cookies()
