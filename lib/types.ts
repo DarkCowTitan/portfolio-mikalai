@@ -64,7 +64,7 @@ export interface Projet {
   ordre_affichage: number
   created_at: string
   updated_at: string
-  type_projet?: TypeProjet
+  type_projet?: TypeProjet | null
   type_projet_id: number | null
   // joined relations
   poles?: Pole[]
