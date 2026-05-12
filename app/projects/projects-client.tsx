@@ -291,14 +291,16 @@ export default function ProjectsClient({
                   const colors = competenceColors[comp.code] ?? { text: 'text-violet-400', activeBg: 'bg-violet-500/15', border: 'border-violet-500/30' }
                   const isActive = selectedComps.includes(comp.id)
                   const count = compCounts[comp.id] ?? 0
-                  if (count === 0) return null
+                  const disabled = count === 0
                   return (
                     <button
                       key={comp.id}
-                      onClick={() => toggleComp(comp.id)}
+                      onClick={() => !disabled && toggleComp(comp.id)}
                       className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs border transition-all duration-150 ${
                         isActive
                           ? `${colors.text} ${colors.activeBg} ${colors.border}`
+                          : disabled
+                          ? 'text-slate-700 border-transparent cursor-not-allowed'
                           : 'text-slate-400 border-transparent hover:border-[#1e1e33] hover:text-slate-200'
                       }`}
                     >

@@ -12,9 +12,9 @@ const skills = {
 }
 
 const timeline = [
-  { year: '2024–2025', title: 'BUT MMI — 2ème année', place: 'IUT Montpellier-Sète', type: 'edu' },
-  { year: '2023–2024', title: 'BUT MMI — 1ère année', place: 'IUT Montpellier-Sète', type: 'edu' },
-  { year: '2023', title: 'Baccalauréat STI2D', place: 'Lycée', type: 'edu' },
+  { year: '2025–2026', title: 'BUT MMI — 2ème année', place: 'IUT MMI Toulon', type: 'edu' },
+  { year: '2024–2025', title: 'BUT MMI — 1ère année', place: 'IUT MMI Toulon', type: 'edu' },
+  { year: '2024', title: 'Baccalauréat STI2D', place: 'Lycée', type: 'edu' },
 ]
 
 export default function AboutPage() {
@@ -44,7 +44,7 @@ export default function AboutPage() {
               className="space-y-5 text-slate-300 leading-relaxed"
             >
               <p className="text-xl text-slate-200 font-medium">
-                Je m&apos;appelle Mikalai Yeuseyenka, étudiant en deuxième année de BUT MMI (Métiers du Multimédia et de l&apos;Internet) à l&apos;IUT Montpellier-Sète.
+                Je m&apos;appelle Mikalai Yeuseyenka, étudiant en deuxième année de BUT MMI (Métiers du Multimédia et de l&apos;Internet) à l&apos;IUT MMI de Toulon.
               </p>
               <p>
                 Passionné par les interfaces numériques depuis toujours, je me retrouve à l&apos;intersection du développement web, du design graphique et de la communication digitale — trois domaines que la formation MMI articule avec cohérence.
@@ -65,9 +65,9 @@ export default function AboutPage() {
               className="flex flex-wrap gap-4"
             >
               {[
-                { icon: MapPin, text: 'Montpellier, France' },
-                { icon: GraduationCap, text: 'BUT MMI' },
-                { icon: Mail, text: 'bydark.cow@gmail.com' },
+                { icon: MapPin, text: 'Toulon, France' },
+                { icon: GraduationCap, text: 'IUT MMI Toulon' },
+                { icon: Mail, text: 'yeuseyenka.mikalai@gmail.com' },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2 text-sm text-slate-400">
                   <Icon size={14} className="text-violet-400" />

@@ -55,7 +55,7 @@ export default function AboutSection() {
             <div className="relative">
               <div className="w-44 h-44 rounded-2xl overflow-hidden bg-zinc-900 border border-white/8 relative">
                 <Image
-                  src="/avatar.png"
+                  src="/avatar.jpg"
                   alt="Mikalai Yeuseyenka"
                   fill
                   className="object-cover"

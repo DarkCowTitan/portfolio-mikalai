@@ -1,8 +1,62 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Mail, MessageSquare, Send, CheckCircle, AlertCircle, Github, Linkedin } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Mail, MessageSquare, Send, CheckCircle, AlertCircle, Github, Linkedin, ChevronDown } from 'lucide-react'
+
+const faqs = [
+  {
+    q: 'Acceptez-vous des missions freelance ?',
+    a: "Oui, je suis ouvert aux missions freelance — développement web, intégration, design UI ou motion design. N'hésitez pas à me décrire votre projet par message.",
+  },
+  {
+    q: 'Êtes-vous disponible pour un stage ?',
+    a: 'Je suis disponible pour un stage à partir de mai-juin 2026. Contactez-moi avec les détails de votre offre et je vous répondrai rapidement.',
+  },
+  {
+    q: 'Quel est votre délai de réponse habituel ?',
+    a: 'Je réponds généralement sous 24 à 48h en semaine. Pour les demandes urgentes, précisez-le dans le sujet de votre message.',
+  },
+  {
+    q: 'Quels types de projets réalisez-vous ?',
+    a: 'Sites web (Next.js, PHP), applications web, identités visuelles, motion design, vidéo — tout ce qui touche au multimédia. Je peux intervenir seul ou en renfort d\'une équipe.',
+  },
+  {
+    q: 'Travaillez-vous à distance ?',
+    a: 'Oui, je travaille en full remote sans problème. Je suis basé à Toulon mais disponible pour des projets partout en France.',
+  },
+]
+
+function FaqItem({ item }: { item: typeof faqs[0] }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="border-b border-white/8 last:border-0">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between gap-3 py-4 text-left text-sm font-medium text-zinc-300 hover:text-white transition-colors"
+      >
+        {item.q}
+        <ChevronDown
+          size={15}
+          className={`shrink-0 text-zinc-600 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <p className="pb-4 text-sm text-zinc-500 leading-relaxed">{item.a}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 export default function ContactPage() {
   const [form, setForm] = useState({ nom: '', email: '', sujet: '', message: '' })
@@ -212,9 +266,9 @@ export default function ContactPage() {
             </div>
 
             {/* Response time */}
-            <div className="p-5 rounded-2xl bg-violet-500/5 border border-violet-500/20">
+            <div className="p-5 rounded-2xl bg-white/3 border border-white/8">
               <div className="flex items-start gap-3">
-                <MessageSquare size={18} className="text-violet-400 mt-0.5" />
+                <MessageSquare size={18} className="text-zinc-400 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-white mb-1">Temps de réponse</p>
                   <p className="text-xs text-slate-400">
@@ -225,6 +279,23 @@ export default function ContactPage() {
             </div>
           </motion.div>
         </div>
+
+        {/* FAQ */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="mt-16"
+        >
+          <h2 className="font-display font-bold text-2xl text-white mb-6">
+            Questions fréquentes
+          </h2>
+          <div className="max-w-2xl divide-y divide-white/8 rounded-2xl bg-white/3 border border-white/8 px-6">
+            {faqs.map((item) => (
+              <FaqItem key={item.q} item={item} />
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   )

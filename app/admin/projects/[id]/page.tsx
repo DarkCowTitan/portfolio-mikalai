@@ -16,6 +16,7 @@ async function getData(id: number) {
     { data: poles },
     { data: projetTags },
     { data: projetLogiciels },
+    { data: images },
   ] = await Promise.all([
     supabase.from('projets').select('*').eq('id', id).single(),
     supabase.from('tags').select('*').order('nom'),
@@ -24,12 +25,13 @@ async function getData(id: number) {
     supabase.from('poles').select('id, nom'),
     supabase.from('projet_tags').select('tag_id').eq('projet_id', id),
     supabase.from('projet_logiciels').select('logiciel_id').eq('projet_id', id),
+    supabase.from('projet_images').select('id, url, alt, caption, ordre').eq('projet_id', id).order('ordre'),
   ])
 
   if (error || !projet) return null
 
   return {
-    projet,
+    projet: { ...projet, images: images ?? [] },
     tags: tags ?? [],
     logiciels: logiciels ?? [],
     typesProjet: typesProjet ?? [],

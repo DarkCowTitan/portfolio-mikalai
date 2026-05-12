@@ -3,8 +3,9 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, ExternalLink, Github, Globe, Calendar, Code2, Palette, Megaphone } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Github, Globe, Calendar, Code2, Palette, Megaphone, Play } from 'lucide-react'
 import PagePreloader from '@/components/page-preloader'
+import ProjectGallery from '@/components/project-gallery'
 
 const poleConfig: Record<string, { color: string; bg: string; border: string; Icon: any }> = {
   'Développement': { color: '#3B82F6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)', Icon: Code2 },
@@ -101,29 +102,45 @@ export default function ProjectDetailClient({ projet, poles, imageUrl }: Props) 
                 </div>
               )}
 
-              {/* Additional images */}
+              {/* Gallery */}
               {projet.images && projet.images.length > 0 && (
-                <div className="mt-8">
-                  <h2 className="text-lg font-semibold text-white mb-4">Galerie</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {projet.images.map((img: any) => {
-                      const src = img.url.startsWith('http')
-                        ? img.url
-                        : `https://yeuseyenka-mikalai.com/fichiers_projets/${img.url}`
-                      return (
-                        <motion.div
-                          key={img.id}
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          viewport={{ once: true }}
-                          className="relative aspect-video rounded-xl overflow-hidden bg-bg-secondary border border-bg-border"
-                        >
-                          <Image src={src} alt={img.alt ?? projet.titre} fill className="object-cover" />
-                        </motion.div>
-                      )
-                    })}
-                  </div>
-                </div>
+                <ProjectGallery images={projet.images} projectTitle={projet.titre} />
+              )}
+
+              {/* Video */}
+              {projet.video_url && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-8"
+                >
+                  <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <Play size={18} className="text-violet-400" />
+                    Vidéo
+                  </h2>
+                  {projet.video_url.includes('youtube.com') || projet.video_url.includes('youtu.be') ? (
+                    <div className="relative aspect-video rounded-xl overflow-hidden bg-bg-secondary border border-bg-border">
+                      <iframe
+                        src={projet.video_url
+                          .replace('watch?v=', 'embed/')
+                          .replace('youtu.be/', 'youtube.com/embed/')
+                          + '?rel=0&modestbranding=1'}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="absolute inset-0 w-full h-full"
+                      />
+                    </div>
+                  ) : (
+                    <div className="rounded-xl overflow-hidden bg-bg-secondary border border-bg-border">
+                      <video
+                        controls
+                        src={projet.video_url}
+                        className="w-full max-h-[480px]"
+                      />
+                    </div>
+                  )}
+                </motion.div>
               )}
 
               {/* Apprentissages critiques */}

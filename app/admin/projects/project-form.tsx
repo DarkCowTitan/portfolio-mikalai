@@ -3,8 +3,17 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
-import { Save, Trash2, AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react'
+import { Save, Trash2, AlertCircle, CheckCircle, ArrowLeft, Plus, X } from 'lucide-react'
 import Link from 'next/link'
+
+interface GalleryImageItem {
+  id?: number
+  url: string
+  alt: string
+  caption: string
+  isNew?: boolean
+  toDelete?: boolean
+}
 
 interface ProjectFormProps {
   projet?: any
@@ -36,6 +45,7 @@ export default function ProjectForm({
     lien_demo: projet?.lien_demo ?? '',
     lien_github: projet?.lien_github ?? '',
     lien_behance: projet?.lien_behance ?? '',
+    video_url: projet?.video_url ?? '',
     est_publie: projet?.est_publie ?? false,
     est_mis_en_avant: projet?.est_mis_en_avant ?? false,
     ordre_affichage: projet?.ordre_affichage ?? 99,
@@ -46,6 +56,28 @@ export default function ProjectForm({
   const [selLogiciels, setSelLogiciels] = useState<number[]>(initialLogiciels)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+
+  // Gallery images
+  const [galleryImages, setGalleryImages] = useState<GalleryImageItem[]>(
+    (projet?.images ?? []).map((img: any) => ({
+      id: img.id,
+      url: img.url ?? '',
+      alt: img.alt ?? '',
+      caption: img.caption ?? '',
+    }))
+  )
+
+  const addGalleryImage = () => {
+    setGalleryImages(prev => [...prev, { url: '', alt: '', caption: '', isNew: true }])
+  }
+
+  const removeGalleryImage = (index: number) => {
+    setGalleryImages(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const updateGalleryImage = (index: number, field: keyof GalleryImageItem, value: string) => {
+    setGalleryImages(prev => prev.map((img, i) => i === index ? { ...img, [field]: value } : img))
+  }
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -76,6 +108,7 @@ export default function ProjectForm({
         lien_demo: form.lien_demo || null,
         lien_github: form.lien_github || null,
         lien_behance: form.lien_behance || null,
+        video_url: form.video_url || null,
         description: form.description || null,
         description_longue: form.description_longue || null,
       }
@@ -102,6 +135,21 @@ export default function ProjectForm({
         await supabase.from('projet_logiciels').delete().eq('projet_id', projectId)
         if (selLogiciels.length > 0) {
           await supabase.from('projet_logiciels').insert(selLogiciels.map(logiciel_id => ({ projet_id: projectId, logiciel_id })))
+        }
+
+        // Update gallery images: replace all
+        await supabase.from('projet_images').delete().eq('projet_id', projectId)
+        const validImages = galleryImages.filter(img => img.url.trim())
+        if (validImages.length > 0) {
+          await supabase.from('projet_images').insert(
+            validImages.map((img, idx) => ({
+              projet_id: projectId,
+              url: img.url.trim(),
+              alt: img.alt.trim() || null,
+              caption: img.caption.trim() || null,
+              ordre: idx,
+            }))
+          )
         }
       }
 
@@ -186,6 +234,76 @@ export default function ProjectForm({
           <label className="block text-sm font-medium text-slate-300 mb-1.5">Behance</label>
           <input type="url" value={form.lien_behance} onChange={set('lien_behance')} className="input-base" placeholder="https://behance.net/..." />
         </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-1.5">Vidéo (URL YouTube ou lien direct)</label>
+          <input type="url" value={form.video_url} onChange={set('video_url')} className="input-base" placeholder="https://youtube.com/watch?v=... ou https://..." />
+        </div>
+      </div>
+
+      {/* Gallery images */}
+      <div className="p-6 rounded-2xl bg-bg-card border border-bg-border space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-white">Images de la galerie</h2>
+          <button
+            type="button"
+            onClick={addGalleryImage}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-600/15 text-violet-400 border border-violet-500/30 text-xs hover:bg-violet-600/25 transition-colors"
+          >
+            <Plus size={13} />
+            Ajouter
+          </button>
+        </div>
+
+        {galleryImages.length === 0 && (
+          <p className="text-xs text-slate-500">Aucune image dans la galerie. Cliquez sur &quot;Ajouter&quot; pour en ajouter une.</p>
+        )}
+
+        {galleryImages.map((img, idx) => (
+          <div key={idx} className="p-4 rounded-xl bg-bg-secondary border border-bg-border space-y-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs text-slate-500 font-mono">Image {idx + 1}</span>
+              <button
+                type="button"
+                onClick={() => removeGalleryImage(idx)}
+                className="p-1 rounded-md text-rose-400 hover:bg-rose-500/10 transition-colors"
+              >
+                <X size={14} />
+              </button>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">URL *</label>
+              <input
+                type="text"
+                value={img.url}
+                onChange={e => updateGalleryImage(idx, 'url', e.target.value)}
+                className="input-base text-sm"
+                placeholder="nom-fichier.jpg ou https://..."
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Texte alt</label>
+                <input
+                  type="text"
+                  value={img.alt}
+                  onChange={e => updateGalleryImage(idx, 'alt', e.target.value)}
+                  className="input-base text-sm"
+                  placeholder="Description pour l'accessibilité"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Légende</label>
+                <input
+                  type="text"
+                  value={img.caption}
+                  onChange={e => updateGalleryImage(idx, 'caption', e.target.value)}
+                  className="input-base text-sm"
+                  placeholder="Texte sous l'image"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Tags */}
