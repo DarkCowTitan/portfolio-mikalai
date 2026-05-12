@@ -1,9 +1,41 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, useScroll, useTransform, useInView } from 'framer-motion'
+import { useRef, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowDown, Sparkles } from 'lucide-react'
+
+function AnimatedCounter({ to, duration = 1.5, suffix = '' }: { to: number; duration?: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const isInView = useInView(ref, { once: true })
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!isInView) return
+    let start = 0
+    const steps = 60
+    const increment = to / steps
+    const interval = (duration * 1000) / steps
+    const timer = setInterval(() => {
+      start += increment
+      if (start >= to) {
+        setCount(to)
+        clearInterval(timer)
+      } else {
+        setCount(Math.floor(start))
+      }
+    }, interval)
+    return () => clearInterval(timer)
+  }, [isInView, to, duration])
+
+  return <span ref={ref}>{count}{suffix}</span>
+}
+
+const stats = [
+  { value: 19, suffix: '', label: 'Projets' },
+  { value: 3, suffix: '', label: 'Pôles MMI' },
+  { value: 2, suffix: '+', label: 'Années d\'études' },
+]
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null)
@@ -18,6 +50,8 @@ export default function HeroSection() {
         <div className="blob absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-violet-600/10 blur-3xl" />
         <div className="blob-delay absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-cyan-400/8 blur-3xl" />
         <div className="blob absolute top-1/2 right-1/3 w-64 h-64 rounded-full bg-violet-400/6 blur-3xl animation-delay-4000" />
+        {/* Extra ambiance blobs */}
+        <div className="blob-delay absolute top-3/4 left-1/3 w-48 h-48 rounded-full bg-pink-500/5 blur-3xl animation-delay-2000" />
       </div>
 
       {/* Grid pattern */}
@@ -77,7 +111,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45 }}
-          className="flex flex-wrap items-center justify-center gap-3 mb-12"
+          className="flex flex-wrap items-center justify-center gap-3 mb-10"
         >
           {[
             { label: 'Développement', color: '#3B82F6', bg: 'rgba(59,130,246,0.1)' },
@@ -101,11 +135,34 @@ export default function HeroSection() {
           ))}
         </motion.div>
 
+        {/* Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="flex items-center justify-center gap-8 sm:gap-12 mb-12"
+        >
+          {stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 + i * 0.1 }}
+              className="text-center"
+            >
+              <div className="text-2xl sm:text-3xl font-bold text-white font-display">
+                <AnimatedCounter to={stat.value} suffix={stat.suffix} duration={1.8} />
+              </div>
+              <div className="text-xs text-slate-500 mt-0.5 font-medium tracking-wide">{stat.label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
+
         {/* CTA Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.65 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <Link href="/projects" className="btn-primary text-base px-8 py-3.5 gap-2">
@@ -121,7 +178,7 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
+          transition={{ delay: 1.4 }}
           className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500"
         >
           <span className="text-xs font-medium tracking-widest uppercase">Scroll</span>
@@ -132,20 +189,6 @@ export default function HeroSection() {
             <ArrowDown size={16} />
           </motion.div>
         </motion.div>
-      </motion.div>
-
-      {/* Side decorations */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="absolute left-8 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-3"
-      >
-        {['25+', 'Projets'].map((item, i) => (
-          <span key={i} className={`text-xs ${i === 0 ? 'text-violet-400 font-bold text-lg' : 'text-slate-500'}`}>
-            {item}
-          </span>
-        ))}
       </motion.div>
     </section>
   )

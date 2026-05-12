@@ -23,7 +23,7 @@ export default function ProjectCard({ projet, index = 0, compact = false }: Proj
   const imageUrl = projet.image_principale
     ? projet.image_principale.startsWith('http')
       ? projet.image_principale
-      : `https://yeuseyenka-mikalai.com/admin/fichiers_projets/${projet.image_principale}`
+      : `https://yeuseyenka-mikalai.com/fichiers_projets/${projet.image_principale}`
     : null
 
   return (

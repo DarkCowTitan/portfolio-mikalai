@@ -177,11 +177,11 @@ export default function ContactPage() {
               <h3 className="font-semibold text-white mb-4">Contact direct</h3>
               <div className="space-y-3">
                 <a
-                  href="mailto:bydark.cow@gmail.com"
-                  className="flex items-center gap-3 text-sm text-slate-400 hover:text-violet-400 transition-colors"
+                  href="mailto:yeuseyenka.mikalai@gmail.com"
+                  className="flex items-center gap-3 text-sm text-zinc-400 hover:text-white transition-colors"
                 >
-                  <Mail size={16} className="text-violet-400" />
-                  bydark.cow@gmail.com
+                  <Mail size={16} className="text-zinc-400" />
+                  yeuseyenka.mikalai@gmail.com
                 </a>
               </div>
             </div>
@@ -191,22 +191,22 @@ export default function ContactPage() {
               <h3 className="font-semibold text-white mb-4">Réseaux</h3>
               <div className="space-y-3">
                 <a
-                  href="https://github.com/DarkC343"
+                  href="https://github.com/DarkCowTitan"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-sm text-slate-400 hover:text-white transition-colors"
+                  className="flex items-center gap-3 text-sm text-zinc-400 hover:text-white transition-colors"
                 >
                   <Github size={16} />
-                  GitHub — DarkC343
+                  GitHub — DarkCowTitan
                 </a>
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/mikalai-yeuseyenka/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-sm text-slate-400 hover:text-[#0077B5] transition-colors"
+                  className="flex items-center gap-3 text-sm text-zinc-400 hover:text-white transition-colors"
                 >
                   <Linkedin size={16} />
-                  LinkedIn
+                  LinkedIn — Mikalai Yeuseyenka
                 </a>
               </div>
             </div>

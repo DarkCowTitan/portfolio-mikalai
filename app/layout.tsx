@@ -1,8 +1,15 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import dynamic from 'next/dynamic'
 import './globals.css'
 import Navigation from '@/components/navigation'
 import Footer from '@/components/footer'
+
+const CursorSpotlight = dynamic(() => import('@/components/cursor-spotlight'), { ssr: false })
+const DottedSurface = dynamic(
+  () => import('@/components/ui/dotted-surface').then(m => ({ default: m.DottedSurface })),
+  { ssr: false }
+)
 
 const inter = Inter({
   subsets: ['latin'],
@@ -39,7 +46,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className={inter.variable}>
-      <body className="noise-bg min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col">
+        <DottedSurface />
+        <CursorSpotlight />
         <Navigation />
         <main className="flex-1">
           {children}

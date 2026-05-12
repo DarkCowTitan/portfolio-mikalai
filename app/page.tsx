@@ -1,8 +1,9 @@
-import { Suspense } from 'react'
 import HeroSection from '@/components/home/hero-section'
 import ProjectsPreview from '@/components/home/projects-preview'
 import PolesSection from '@/components/home/poles-section'
 import CTASection from '@/components/home/cta-section'
+import SkillsMarquee from '@/components/home/skills-marquee'
+import AboutSection from '@/components/home/about-section'
 import { getProjets, getPoles } from '@/lib/supabase'
 
 export const revalidate = 3600 // Revalidate every hour
@@ -21,8 +22,10 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection />
+      <SkillsMarquee />
       <PolesSection poles={poles} />
       <ProjectsPreview projects={projects} />
+      <AboutSection />
       <CTASection />
     </>
   )

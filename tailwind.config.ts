@@ -14,19 +14,10 @@ const config: Config = {
       },
       colors: {
         bg: {
-          DEFAULT: '#080810',
-          secondary: '#0f0f1a',
-          card: '#12121f',
-          border: '#1e1e33',
-        },
-        violet: {
-          400: '#a78bfa',
-          500: '#8b5cf6',
-          600: '#7c3aed',
-        },
-        cyan: {
-          400: '#22d3ee',
-          500: '#06b6d4',
+          DEFAULT: '#0a0a0a',
+          secondary: '#111111',
+          card: '#141414',
+          border: '#1f1f1f',
         },
         pole: {
           dev: '#3B82F6',
@@ -36,7 +27,7 @@ const config: Config = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'grid-pattern': 'linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px)',
+        'grid-pattern': 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
       },
       backgroundSize: {
         'grid': '60px 60px',

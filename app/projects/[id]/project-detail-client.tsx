@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, ExternalLink, Github, Globe, Calendar, Code2, Palette, Megaphone } from 'lucide-react'
+import PagePreloader from '@/components/page-preloader'
 
 const poleConfig: Record<string, { color: string; bg: string; border: string; Icon: any }> = {
   'Développement': { color: '#3B82F6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)', Icon: Code2 },
@@ -20,6 +21,7 @@ interface Props {
 export default function ProjectDetailClient({ projet, poles, imageUrl }: Props) {
   return (
     <div className="min-h-screen pt-20">
+      <PagePreloader title={projet.titre} />
       {/* Hero image */}
       <div className="relative h-[40vh] sm:h-[50vh] bg-bg-secondary overflow-hidden">
         {imageUrl ? (
@@ -107,7 +109,7 @@ export default function ProjectDetailClient({ projet, poles, imageUrl }: Props) 
                     {projet.images.map((img: any) => {
                       const src = img.url.startsWith('http')
                         ? img.url
-                        : `https://yeuseyenka-mikalai.com/admin/fichiers_projets/${img.url}`
+                        : `https://yeuseyenka-mikalai.com/fichiers_projets/${img.url}`
                       return (
                         <motion.div
                           key={img.id}

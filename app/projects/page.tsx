@@ -1,6 +1,5 @@
-import { Suspense } from 'react'
 import ProjectsClient from './projects-client'
-import { getProjets, getPoles, getTags } from '@/lib/supabase'
+import { getProjets, getPoles, getTags, getCompetences, getTypesProjet } from '@/lib/supabase'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -11,10 +10,12 @@ export const metadata: Metadata = {
 export const revalidate = 3600
 
 export default async function ProjectsPage() {
-  const [projects, poles, tags] = await Promise.all([
+  const [projects, poles, tags, competences, typesProjet] = await Promise.all([
     getProjets(),
     getPoles(),
     getTags(),
+    getCompetences(),
+    getTypesProjet(),
   ])
 
   return (
@@ -23,6 +24,8 @@ export default async function ProjectsPage() {
         initialProjects={projects}
         poles={poles}
         tags={tags}
+        competences={competences}
+        typesProjet={typesProjet}
       />
     </div>
   )

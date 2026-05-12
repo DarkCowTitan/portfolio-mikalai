@@ -112,6 +112,15 @@ export function extractPolesFromProjet(projet: any): string[] {
   return Array.from(poles)
 }
 
+export async function getCompetences() {
+  const { data, error } = await supabase
+    .from('competences_but')
+    .select('*')
+    .order('id')
+  if (error) throw error
+  return data ?? []
+}
+
 export function getPoleColor(poleName: string): string {
   const colors: Record<string, string> = {
     'Développement': '#3B82F6',

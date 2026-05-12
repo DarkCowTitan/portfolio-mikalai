@@ -5,7 +5,7 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'yeuseyenka-mikalai.com',
-        pathname: '/admin/fichiers_projets/**',
+        pathname: '/fichiers_projets/**',
       },
       {
         protocol: 'https',
