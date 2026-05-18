@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import { Save, Trash2, AlertCircle, CheckCircle, ArrowLeft, Plus, X } from 'lucide-react'
 import Link from 'next/link'
+import FileUploadZone from '@/components/admin/file-upload-zone'
 
 interface GalleryImageItem {
   id?: number
@@ -247,63 +248,73 @@ export default function ProjectForm({
           <button
             type="button"
             onClick={addGalleryImage}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-600/15 text-violet-400 border border-violet-500/30 text-xs hover:bg-violet-600/25 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bg-secondary text-slate-400 border border-bg-border text-xs hover:border-slate-500 transition-colors"
           >
             <Plus size={13} />
-            Ajouter
+            URL manuelle
           </button>
         </div>
 
-        {galleryImages.length === 0 && (
-          <p className="text-xs text-slate-500">Aucune image dans la galerie. Cliquez sur &quot;Ajouter&quot; pour en ajouter une.</p>
-        )}
+        {/* Drag-and-drop upload zone */}
+        <FileUploadZone
+          label="Glissez des images ou vidéos ici pour les uploader"
+          onUploaded={(url) => {
+            setGalleryImages(prev => [...prev, { url, alt: '', caption: '', isNew: true }])
+          }}
+        />
 
-        {galleryImages.map((img, idx) => (
-          <div key={idx} className="p-4 rounded-xl bg-bg-secondary border border-bg-border space-y-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-slate-500 font-mono">Image {idx + 1}</span>
-              <button
-                type="button"
-                onClick={() => removeGalleryImage(idx)}
-                className="p-1 rounded-md text-rose-400 hover:bg-rose-500/10 transition-colors"
-              >
-                <X size={14} />
-              </button>
-            </div>
-            <div>
-              <label className="block text-xs text-slate-400 mb-1">URL *</label>
-              <input
-                type="text"
-                value={img.url}
-                onChange={e => updateGalleryImage(idx, 'url', e.target.value)}
-                className="input-base text-sm"
-                placeholder="nom-fichier.jpg ou https://..."
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs text-slate-400 mb-1">Texte alt</label>
-                <input
-                  type="text"
-                  value={img.alt}
-                  onChange={e => updateGalleryImage(idx, 'alt', e.target.value)}
-                  className="input-base text-sm"
-                  placeholder="Description pour l'accessibilité"
-                />
+        {/* Existing / manual items */}
+        {galleryImages.length > 0 && (
+          <div className="space-y-2 pt-1">
+            <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Fichiers dans la galerie ({galleryImages.length})</p>
+            {galleryImages.map((img, idx) => (
+              <div key={idx} className="p-4 rounded-xl bg-bg-secondary border border-bg-border space-y-3">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-slate-500 font-mono">#{idx + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeGalleryImage(idx)}
+                    className="p-1 rounded-md text-slate-600 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+                <div>
+                  <label className="block text-xs text-slate-400 mb-1">URL *</label>
+                  <input
+                    type="text"
+                    value={img.url}
+                    onChange={e => updateGalleryImage(idx, 'url', e.target.value)}
+                    className="input-base text-sm"
+                    placeholder="nom-fichier.jpg ou https://..."
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-slate-400 mb-1">Texte alt</label>
+                    <input
+                      type="text"
+                      value={img.alt}
+                      onChange={e => updateGalleryImage(idx, 'alt', e.target.value)}
+                      className="input-base text-sm"
+                      placeholder="Description pour l'accessibilité"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-slate-400 mb-1">Légende</label>
+                    <input
+                      type="text"
+                      value={img.caption}
+                      onChange={e => updateGalleryImage(idx, 'caption', e.target.value)}
+                      className="input-base text-sm"
+                      placeholder="Texte sous l'image"
+                    />
+                  </div>
+                </div>
               </div>
-              <div>
-                <label className="block text-xs text-slate-400 mb-1">Légende</label>
-                <input
-                  type="text"
-                  value={img.caption}
-                  onChange={e => updateGalleryImage(idx, 'caption', e.target.value)}
-                  className="input-base text-sm"
-                  placeholder="Texte sous l'image"
-                />
-              </div>
-            </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
 
       {/* Tags */}
